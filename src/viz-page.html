@@ -1,3 +1,4 @@
+<link rel="import" href="../bower_components/google-youtube/google-youtube.html"
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <dom-module id="viz-page">
@@ -7,7 +8,15 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+    Page {{videoId}}
+    <google-youtube
+      video-id="[[videoId]]"
+      height="270px"
+      width="480px"
+      rel="0"
+      start="5"
+      autoplay="1">
+    </google-youtube>
   </template>
 
   <script>
@@ -16,10 +25,7 @@
       is: 'viz-page',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'Venice',
-        },
+        videoId: String
       },
 
     });

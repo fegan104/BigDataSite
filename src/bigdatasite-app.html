@@ -1,6 +1,12 @@
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
@@ -14,18 +20,44 @@
   <template>
     <style>
       :host {
+        --app-primary-color: #673AB7;
+        --app-secondary-color: black;
         display: block;
       }
-      paper-toolbar.deep-purple {
-        --paper-toolbar-background: #673AB7;
-        --paper-toolbar-title: {
-            height: 25px;
-            margin:0px;
-          };
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
       }
-      paper-toggle-button.yellow {
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+      paper-toggle-button.cyan-yellow {
+        --paper-toggle-button-unchecked-bar-color:#80DEEA;
+        --paper-toggle-button-unchecked-button-color:#00BCD4;
         --paper-toggle-button-checked-bar-color: #FFF59D;
         --paper-toggle-button-checked-button-color: #FFEB3B;
+      }
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+
+        padding: 0 16px;
+
+        text-decoration: none;
+
+        color: var(--app-secondary-color);
+
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+
+        font-weight: bold;
       }
     </style>
     <!-- Routing Info -->
@@ -37,23 +69,45 @@
       tail="{{subroute}}">
     </app-route>
 
-    <!-- Toolbar -->
-    <paper-toolbar class="deep-purple">
-      <span id="toolbarText" class="title">Visualizations</span>
-      <paper-toggle-button class="yellow" checked={{showViz}}></paper-toggle-button>
-      <paper-icon-button icon="more-vert"></paper-icon-button>
-    </paper-toolbar>
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer" swipe-open>
+        <app-toolbar>Venice</app-toolbar>
+        <!-- Selector -->
+        <iron-selector
+         selected="[[page]]"
+         attr-for-selected="name"
+         class="drawer-list"
+         role="navigation">
+          <a name="view1" href="/one">Page One</a>
+          <a name="view2" href="/two">Page Two</a>
+          <a name="view3" href="/three">Page Three</a>
+        </iron-selector>
+      </app-drawer>
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
 
-    <!-- Main content -->
-    <iron-pages
-      selected="[[page]]"
-      attr-for-selected="name"
-      fallback-selection="not-found"
-      role="main">
-      <viz-page name="one" prop1="One"></viz-page>
-      <viz-page name="two" prop1="Two"></viz-page>
-      <viz-page name="three" prop1="Three"></viz-page>
-    </iron-pages>
+        <app-header condenses reveals effects="waterfall">
+          <!-- Toolbar -->
+          <app-toolbar>
+            <paper-icon-button icon="menu" drawer-toggle style="margin-left: -8px;"></paper-icon-button>
+            <div main-title id="toolbarText">Visualizations</div>
+            <paper-toggle-button class="cyan-yellow" checked={{showViz}}></paper-toggle-button>
+            <paper-icon-button icon="more-vert"></paper-icon-button>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+          selected="[[page]]"
+          attr-for-selected="name"
+          fallback-selection="not-found"
+          role="main">
+          <viz-page name="one" videoId="rHxxLYzJ8Sw"></viz-page>
+          <viz-page name="two" videoId="Two"></viz-page>
+          <viz-page name="three" videoId="Three"></viz-page>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
   </template>
 
   <script>
@@ -85,9 +139,13 @@
         if (this.showViz) {
           this.$.toolbarText.innerHTML = 'Visualizations';
         } else {
-          this.$.toolbarText.innerHTML = 'Data';
+          this.$.toolbarText.innerHTML = 'Urban Elements';
         }
         console.log(this.showViz);
+      },
+
+      _toggleDrawer: function() {
+        this.$.drawer.toggle();
       },
 
       _routePageChanged: function(page) {
