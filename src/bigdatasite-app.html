@@ -1,0 +1,109 @@
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="viz-page.html">
+<link rel="import" href="not-found.html">
+
+<dom-module id="bigdatasite-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-toolbar.deep-purple {
+        --paper-toolbar-background: #673AB7;
+        --paper-toolbar-title: {
+            height: 25px;
+            margin:0px;
+          };
+      }
+      paper-toggle-button.yellow {
+        --paper-toggle-button-checked-bar-color: #FFF59D;
+        --paper-toggle-button-checked-button-color: #FFEB3B;
+      }
+    </style>
+    <!-- Routing Info -->
+    <app-location route="{{route}}"></app-location>
+    <app-route
+      route="{{route}}"
+      pattern="/:page"
+      data="{{routeData}}"
+      tail="{{subroute}}">
+    </app-route>
+
+    <!-- Toolbar -->
+    <paper-toolbar class="deep-purple">
+      <span id="toolbarText" class="title">Visualizations</span>
+      <paper-toggle-button class="yellow" checked={{showViz}}></paper-toggle-button>
+      <paper-icon-button icon="more-vert"></paper-icon-button>
+    </paper-toolbar>
+
+    <!-- Main content -->
+    <iron-pages
+      selected="[[page]]"
+      attr-for-selected="name"
+      fallback-selection="not-found"
+      role="main">
+      <viz-page name="one" prop1="One"></viz-page>
+      <viz-page name="two" prop1="Two"></viz-page>
+      <viz-page name="three" prop1="Three"></viz-page>
+    </iron-pages>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'bigdatasite-app',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },
+        showViz: {
+          type: Boolean,
+          value: true
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      listeners: {
+        'change': 'contentToggled'
+      },
+
+      contentToggled: function(e) {
+        if (this.showViz) {
+          this.$.toolbarText.innerHTML = 'Visualizations';
+        } else {
+          this.$.toolbarText.innerHTML = 'Data';
+        }
+        console.log(this.showViz);
+      },
+
+      _routePageChanged: function(page) {
+        this.page = page || 'one';
+      },
+
+      _pageChanged: function(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('viz-page.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+
+      _showPage404: function() {
+        this.page = 'not-found';
+      }
+
+    });
+  </script>
+</dom-module>
