@@ -4,17 +4,20 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/paper-menu/paper-submenu.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="viz-page.html">
 <link rel="import" href="not-found.html">
+<link rel="import" href="viz-page.html">
 
 <dom-module id="bigdatasite-app">
   <template>
@@ -42,22 +45,16 @@
         margin: 0 20px;
       }
 
-      .drawer-list a {
-        display: block;
-
-        padding: 0 16px;
-
-        text-decoration: none;
-
-        color: var(--app-secondary-color);
-
-        line-height: 40px;
+      paper-item {
+        --paper-item: {
+          cursor: pointer;
+        };
       }
-
-      .drawer-list a.iron-selected {
-        color: black;
-
-        font-weight: bold;
+      .sublist paper-item {
+        padding-left: 30px;
+      }
+      .sublist2 paper-item {
+        padding-left: 50px;
       }
     </style>
     <!-- Routing Info -->
@@ -74,15 +71,58 @@
       <app-drawer id="drawer" swipe-open>
         <app-toolbar>Venice</app-toolbar>
         <!-- Selector -->
-        <iron-selector
+        <!-- <iron-selector
+         id="selector"
          selected="[[page]]"
          attr-for-selected="name"
          class="drawer-list"
          role="navigation">
-          <a name="view1" href="/one">Page One</a>
-          <a name="view2" href="/two">Page Two</a>
-          <a name="view3" href="/three">Page Three</a>
-        </iron-selector>
+          <a name="one" href="/one">Page One</a>
+          <a name="two" href="/two">Page Two</a>
+          <a name="three" href="/three">Page Three</a>
+        </iron-selector> -->
+        <paper-menu id="menu" attr-for-item-title="label">
+          <paper-submenu label="paper-menu">
+            <paper-item class="menu-trigger">Europe</paper-item>
+            <paper-menu class="menu-content sublist">
+              <paper-submenu label="Properties">
+                <paper-item class="menu-trigger">Islands</paper-item>
+                <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
+                  <paper-item>United Kingdom</paper-item>
+                  <paper-item>Ireland</paper-item>
+                </paper-menu>
+              </paper-submenu>
+              <paper-submenu label="Methods">
+                <paper-item class="menu-trigger">Continental</paper-item>
+                <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
+                  <template is="dom-repeat" items="[[_menuItems]]">
+                    <paper-item>[[item]]</paper-item>
+                  </template>
+                </paper-menu>
+              </paper-submenu>
+          </paper-menu>
+        </paper-submenu>
+
+        <paper-submenu label="paper-submenu">
+          <paper-item class="menu-trigger">Asia</paper-item>
+          <paper-menu class="menu-content sublist">
+            <paper-submenu label="Properties">
+              <paper-item class="menu-trigger">Islands</paper-item>
+              <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
+                <paper-item>Taiwan</paper-item>
+              </paper-menu>
+              </paper-submenu>
+              <paper-submenu label="Methods">
+                <paper-item class="menu-trigger">Continental</paper-item>
+                <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
+                  <paper-item>China</paper-item>
+                  <paper-item>South Korea</paper-item>
+                  <paper-item>Vietnam</paper-item>
+                </paper-menu>
+            </paper-submenu>
+          </paper-menu>
+        </paper-submenu>
+        </paper-menu>
       </app-drawer>
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
@@ -102,9 +142,9 @@
           attr-for-selected="name"
           fallback-selection="not-found"
           role="main">
-          <viz-page name="one" videoId="rHxxLYzJ8Sw"></viz-page>
-          <viz-page name="two" videoId="Two"></viz-page>
-          <viz-page name="three" videoId="Three"></viz-page>
+          <viz-page name="one" video-id="0iaGv0__NGs"></viz-page>
+          <viz-page name="two" video-id="fPDYj3IMkRI"></viz-page>
+          <viz-page name="three" video-id="txqiwrbYGrs"></viz-page>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -124,6 +164,12 @@
         showViz: {
           type: Boolean,
           value: true
+        },
+        _menuItems:{
+          type: Function,
+          value: function() {
+            return ["France", "Denmark", "Netherlands"];
+          }
         }
       },
 
@@ -142,6 +188,10 @@
           this.$.toolbarText.innerHTML = 'Urban Elements';
         }
         console.log(this.showViz);
+      },
+
+      menuSelected: function(e){
+        console.log(e.target.selectedItem.innerHTML);
       },
 
       _toggleDrawer: function() {
