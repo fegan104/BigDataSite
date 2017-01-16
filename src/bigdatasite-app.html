@@ -14,9 +14,12 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="not-found.html">
+<link rel="import" href="elements-page.html">
+<link rel="import" href="data-pages.html">
 <link rel="import" href="viz-page.html">
 
 <dom-module id="bigdatasite-app">
@@ -57,95 +60,68 @@
         padding-left: 50px;
       }
     </style>
-    <!-- Routing Info -->
-    <app-location route="{{route}}"></app-location>
+    <!-- Routing Config -->
+    <app-location route="{{route}}" use-hash-as-path></app-location>
     <app-route
       route="{{route}}"
       pattern="/:page"
       data="{{routeData}}"
-      tail="{{subroute}}">
+      tail="{{subroute}}"
+      active="{{pageActive}}">
     </app-route>
 
-    <app-drawer-layout fullbleed>
-      <!-- Drawer content -->
-      <app-drawer id="drawer" swipe-open>
-        <app-toolbar>Venice</app-toolbar>
-        <!-- Selector -->
-        <!-- <iron-selector
-         id="selector"
-         selected="[[page]]"
-         attr-for-selected="name"
-         class="drawer-list"
-         role="navigation">
-          <a name="one" href="/one">Page One</a>
-          <a name="two" href="/two">Page Two</a>
-          <a name="three" href="/three">Page Three</a>
-        </iron-selector> -->
-        <paper-menu id="menu" attr-for-item-title="label">
-          <paper-submenu label="paper-menu">
-            <paper-item class="menu-trigger">Europe</paper-item>
-            <paper-menu class="menu-content sublist">
-              <paper-submenu label="Properties">
-                <paper-item class="menu-trigger">Islands</paper-item>
-                <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
-                  <paper-item>United Kingdom</paper-item>
-                  <paper-item>Ireland</paper-item>
-                </paper-menu>
-              </paper-submenu>
-              <paper-submenu label="Methods">
-                <paper-item class="menu-trigger">Continental</paper-item>
-                <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
-                  <template is="dom-repeat" items="[[_menuItems]]">
-                    <paper-item>[[item]]</paper-item>
-                  </template>
-                </paper-menu>
-              </paper-submenu>
-          </paper-menu>
-        </paper-submenu>
+    <!-- Menu Config JSON -->
+    <iron-ajax
+      auto
+      url="/data.json"
+      handle-as="json"
+      last-response="{{menuItems}}"
+      debounce-duration="300">
+    </iron-ajax>
 
-        <paper-submenu label="paper-submenu">
-          <paper-item class="menu-trigger">Asia</paper-item>
-          <paper-menu class="menu-content sublist">
-            <paper-submenu label="Properties">
-              <paper-item class="menu-trigger">Islands</paper-item>
-              <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
-                <paper-item>Taiwan</paper-item>
+    <app-drawer-layout fullbleed>
+      <app-drawer id="drawer" swipe-open>
+        <app-toolbar><b>Venice<b/></app-toolbar>
+
+        <!-- Drawer Menu -->
+        <paper-menu id="menu" selected="{{pageData.tail}}" attr-for-selected="label">
+          <template is="dom-repeat" items="[[menuItems]]">
+            <!-- Menu Items -->
+            <paper-submenu>
+              <paper-item label="[[item.name]]" class="menu-trigger">
+                [[item.name]]
+              </paper-item>
+
+              <paper-menu class="menu-content sublist">
+                <!-- Submenu Items -->
+                <template is="dom-repeat" items="[[item.countries]]">
+
+                  <paper-item label="[[item]]">
+                    <a href="[[_computeLink(item)]]">[[item]]</a>
+                  </paper-item>
+
+                </template>
               </paper-menu>
-              </paper-submenu>
-              <paper-submenu label="Methods">
-                <paper-item class="menu-trigger">Continental</paper-item>
-                <paper-menu class="menu-content sublist2" on-iron-select="menuSelected">
-                  <paper-item>China</paper-item>
-                  <paper-item>South Korea</paper-item>
-                  <paper-item>Vietnam</paper-item>
-                </paper-menu>
+
             </paper-submenu>
-          </paper-menu>
-        </paper-submenu>
+
+          </template>
         </paper-menu>
       </app-drawer>
+
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
-
+        <!-- Toolbar -->
         <app-header condenses reveals effects="waterfall">
-          <!-- Toolbar -->
           <app-toolbar>
-            <paper-icon-button icon="menu" drawer-toggle style="margin-left: -8px;"></paper-icon-button>
-            <div main-title id="toolbarText">Visualizations</div>
-            <paper-toggle-button class="cyan-yellow" checked={{showViz}}></paper-toggle-button>
+            <paper-icon-button icon="menu" drawer-toggle style="margin-left: -12px;"></paper-icon-button>
+            <div main-title id="toolbarText"></div>
+            <paper-toggle-button class="cyan-yellow" checked={{checked}} on-change="_contentToggled"></paper-toggle-button>
             <paper-icon-button icon="more-vert"></paper-icon-button>
           </app-toolbar>
         </app-header>
-
-        <iron-pages
-          selected="[[page]]"
-          attr-for-selected="name"
-          fallback-selection="not-found"
-          role="main">
-          <viz-page name="one" video-id="0iaGv0__NGs"></viz-page>
-          <viz-page name="two" video-id="fPDYj3IMkRI"></viz-page>
-          <viz-page name="three" video-id="txqiwrbYGrs"></viz-page>
-        </iron-pages>
+        <!-- Pages -->
+        <data-pages page="{{pageData.page}}" route="{{pageTail}}"></data-pages>
       </app-header-layout>
     </app-drawer-layout>
   </template>
@@ -155,63 +131,44 @@
 
       is: 'bigdatasite-app',
 
-      properties: {
-        page: {
-          type: String,
-          reflectToAttribute: true,
-          observer: '_pageChanged'
-        },
-        showViz: {
-          type: Boolean,
-          value: true
-        },
-        _menuItems:{
-          type: Function,
-          value: function() {
-            return ["France", "Denmark", "Netherlands"];
-          }
+      properties:{
+        title:{
+          type:String,
+          observer:"_toolbarChanged"
         }
       },
 
-      observers: [
-        '_routePageChanged(routeData.page)'
-      ],
-
-      listeners: {
-        'change': 'contentToggled'
+      attached: function() {
+        if (!this.route.path) {
+          this.set('route.path', '/visualization');
+          this.title = 'Visualizations';
+          this.checked = true;
+        } else if (this.route.path === '/elements') {
+          this.title = 'Urban Elements';
+          this.checked = false;
+        } else /*if (this.route.path === '/visualization')*/ {
+          this.title = 'Visualizations';
+          this.checked = true;
+        }
       },
 
-      contentToggled: function(e) {
-        if (this.showViz) {
-          this.$.toolbarText.innerHTML = 'Visualizations';
+      _contentToggled: function(e) {
+        if (this.checked) {
+          this.title = 'Visualizations';
+          this.set('route.path', '/visualization');
         } else {
-          this.$.toolbarText.innerHTML = 'Urban Elements';
+          this.title = 'Urban Elements';
+          this.set('route.path', '/elements');
         }
-        console.log(this.showViz);
       },
 
-      menuSelected: function(e){
-        console.log(e.target.selectedItem.innerHTML);
+      _toolbarChanged:function() {
+        this.$.toolbarText.innerHTML = this.title;
       },
 
-      _toggleDrawer: function() {
-        this.$.drawer.toggle();
-      },
-
-      _routePageChanged: function(page) {
-        this.page = page || 'one';
-      },
-
-      _pageChanged: function(page) {
-        // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('viz-page.html');
-        this.importHref(resolvedPageUrl, null, this._showPage404, true);
-      },
-
-      _showPage404: function() {
-        this.page = 'not-found';
+      _computeLink:function(name) {
+        return "#/visualization/" + name.toLowerCase().split(' ').join('_');
       }
-
     });
   </script>
 </dom-module>

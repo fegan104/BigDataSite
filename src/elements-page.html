@@ -1,0 +1,27 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="elements-page">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+      :host([active]){
+        display: block;
+      }
+    </style>
+    A bunch of urban elements...
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'elements-page',
+
+      properties: {
+        name: String
+      },
+
+    });
+  </script>
+</dom-module>

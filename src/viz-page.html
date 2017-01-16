@@ -1,14 +1,17 @@
-<link rel="import" href="../bower_components/google-youtube/google-youtube.html"
+<link rel="import" href="../bower_components/google-youtube/google-youtube.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <dom-module id="viz-page">
   <template>
     <style>
-      :host {
-        display: block;
-      }
+    :host {
+      display: none;
+    }
+    :host([active]){
+      display: block;
+    }
     </style>
-    Page {{videoId}}
+    Page {{vizId}}
     <google-youtube
       video-id="[[videoId]]"
       height="270px"
@@ -25,7 +28,9 @@
       is: 'viz-page',
 
       properties: {
-        videoId: String
+        videoId: String,
+        vizId:String,
+        name: String
       },
 
     });
