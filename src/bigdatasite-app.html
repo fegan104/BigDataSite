@@ -142,6 +142,10 @@
         }
       },
 
+      listeners:{
+        'change-title':'setTitle'
+      },
+
       attached: function() {
         if (!this.route.path) {
           this.set('route.path', '/visualization');
@@ -154,6 +158,10 @@
           this.title = 'Visualizations';
           this.checked = true;
         }
+      },
+
+      setTitle: function(e){
+        this.title = e.detail.title;
       },
 
       _contentToggled: function(e) {
