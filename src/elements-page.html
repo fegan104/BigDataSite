@@ -19,7 +19,12 @@
       is: 'elements-page',
 
       properties: {
-        name: String
+        name: String,
+        active: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        }
       },
 
     });

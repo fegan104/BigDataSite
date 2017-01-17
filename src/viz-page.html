@@ -1,25 +1,51 @@
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <dom-module id="viz-page">
   <template>
     <style>
-    :host {
-      display: none;
-    }
-    :host([active]){
-      display: block;
-    }
+      :host {
+        display: none;
+      }
+      :host([active]){
+        display: block;
+      }
+      paper-fab{
+        float: right;
+        margin: 8px;
+      }
+      paper-fab.deep-orange {
+        --paper-fab-background: #ff5722;
+        --paper-fab-keyboard-focus-background: #bf360C;
+      }
     </style>
-    Page {{vizId}}
+
+    <iron-ajax
+      auto
+      url="/visualizations/{{vizId}}.json"
+      handle-as="json"
+      last-response="{{viz}}"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <!-- Listen to show description dialog -->
+    <iron-signals on-iron-signal-desc="_showDescription"></iron-signals>
+
     <google-youtube
-      video-id="[[videoId]]"
-      height="270px"
-      width="480px"
-      rel="0"
-      start="5"
+      video-id="[[viz.videoId]]"
+      height="83vh"
+      width="100%"
       autoplay="0">
     </google-youtube>
+
+    <paper-fab class="deep-orange"
+      icon="open-in-new"
+      title="open-in-new"
+      on-tap="_openViz">
+    </paper-fab>
   </template>
 
   <script>
@@ -28,10 +54,25 @@
       is: 'viz-page',
 
       properties: {
-        videoId: String,
         vizId:String,
-        name: String
+        active: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        }
       },
+
+      ready: function(){
+        this.addEventListener('show-desc', this._showDescription);
+      },
+
+      _openViz: function() {
+        window.open(this.viz.link);
+      },
+
+      _showDescription: function(e, detail, sender) {
+        console.log("show desc");
+      }
 
     });
   </script>

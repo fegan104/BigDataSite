@@ -8,6 +8,7 @@
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-menu/paper-submenu.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
@@ -20,7 +21,6 @@
 <link rel="import" href="not-found.html">
 <link rel="import" href="elements-page.html">
 <link rel="import" href="data-pages.html">
-<link rel="import" href="viz-page.html">
 
 <dom-module id="bigdatasite-app">
   <template>
@@ -73,18 +73,19 @@
     <!-- Menu Config JSON -->
     <iron-ajax
       auto
-      url="/data.json"
+      url="/vizualizations.json"
       handle-as="json"
       last-response="{{menuItems}}"
       debounce-duration="300">
     </iron-ajax>
+
 
     <app-drawer-layout fullbleed>
       <app-drawer id="drawer" swipe-open>
         <app-toolbar><b>Venice<b/></app-toolbar>
 
         <!-- Drawer Menu -->
-        <paper-menu id="menu" selected="{{pageData.tail}}" attr-for-selected="label">
+        <paper-menu id="menu" selected="[[routeData.tail]]" attr-for-selected="label">
           <template is="dom-repeat" items="[[menuItems]]">
             <!-- Menu Items -->
             <paper-submenu>
@@ -117,11 +118,14 @@
             <paper-icon-button icon="menu" drawer-toggle style="margin-left: -12px;"></paper-icon-button>
             <div main-title id="toolbarText"></div>
             <paper-toggle-button class="cyan-yellow" checked={{checked}} on-change="_contentToggled"></paper-toggle-button>
-            <paper-icon-button icon="more-vert"></paper-icon-button>
+            <paper-icon-button icon="more-vert" on-tap="_fireDescSignal"></paper-icon-button>
           </app-toolbar>
         </app-header>
+
         <!-- Pages -->
-        <data-pages page="{{pageData.page}}" route="{{pageTail}}"></data-pages>
+        <main>
+          <data-pages page="{{routeData.page}}" route="{{route}}" height="100%" width="100%"></data-pages>
+        </main>
       </app-header-layout>
     </app-drawer-layout>
   </template>
@@ -168,6 +172,10 @@
 
       _computeLink:function(name) {
         return "#/visualization/" + name.toLowerCase().split(' ').join('_');
+      },
+
+      _fireDescSignal:function() {
+        this.fire('iron-signal', {name: "desc"});
       }
     });
   </script>

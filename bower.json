@@ -16,7 +16,9 @@
     "iron-selector": "PolymerElements/iron-selector#^1.5.2",
     "paper-item": "PolymerElements/paper-item#^1.2.1",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.4.3",
-    "iron-ajax": "PolymerElements/iron-ajax#^1.4.3"
+    "iron-ajax": "PolymerElements/iron-ajax#^1.4.3",
+    "paper-fab": "PolymerElements/paper-fab#^1.2.1",
+    "iron-signals": "PolymerElements/iron-signals#^1.0.3"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

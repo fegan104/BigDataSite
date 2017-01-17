@@ -1,4 +1,3 @@
-<link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="elements-page.html">
@@ -14,20 +13,20 @@
     <!-- Our two route types -->
     <app-route
       route="{{route}}"
-      pattern = "/elements"
+      pattern="/elements"
       active="{{elementsActive}}">
     </app-route>
 
     <app-route
       route="{{route}}"
-      pattern = "/visualization/:slug"
+      pattern="/visualization/:slug"
       active="{{vizActive}}"
       data="{{vizData}}">
     </app-route>
 
     <!-- Elements -->
-    <elements-page active="{{elementsActive}}"></elements-page>
-    <viz-page viz-id="{{vizData.slug}}" active= "{{vizActive}}"></viz-page>
+    <elements-page active="{{elementsActive}}" height="100%" width="100%"></elements-page>
+    <viz-page viz-id="{{vizData.slug}}" active="{{vizActive}}" height="100%" width="100%"></viz-page>
 
   </template>
 
@@ -38,8 +37,7 @@
       properties: {
         route: String,
         page: String
-      },
-
+      }
     });
   </script>
 </dom-module>
