@@ -1,25 +1,64 @@
 [
   {
-    "name":"Europe",
+    "name":"Architecture",
     "countries": [
-      "France",
-      "Ireland",
-      "Germany"
+      "Bell Towers",
+      "Hidden Venice"
     ]
   },
   {
-    "name":"Asia",
+    "name":"Art",
     "countries": [
-      "China",
-      "South Korea",
-      "Japan"
+      "Displaced Art",
+      "Wells"
     ]
   },
   {
-    "name":"North America",
+    "name":"Economy",
     "countries": [
-      "Canada",
-      "United States"
+      "Shops",
+      "Stores"
+    ]
+  },
+  {
+    "name":"Environment",
+    "countries": [
+      "Canal Hydrodynamics",
+      "Moto Ondoso",
+      "Tidal Latency",
+      "Tide Levels"
+    ]
+  },
+  {
+    "name":"History",
+    "countries": [
+      "Evolution of Venice",
+      "Historical Map Explorer",
+      "History of Venice"
+    ]
+  },
+  {
+    "name":"Infrastructure",
+    "countries": [
+      "Bridge Clearance",
+      "Canals",
+      "Canal Maintenance",
+      "Wifi Hotspots"
+    ]
+  },
+  {
+    "name":"Mobility",
+    "countries": [
+      "Boat Traffic Model",
+      "Pedestrian Congestion",
+      "Pedestrian Model"
+    ]
+  },
+  {
+    "name":"Society",
+    "countries": [
+      "Census Evolution",
+      "Islands"
     ]
   }
 ]
