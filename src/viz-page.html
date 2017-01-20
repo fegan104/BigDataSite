@@ -78,8 +78,6 @@
       },
 
       _success: function() {
-        console.log("viz-page:_success " + this.vizId);
-        console.log("viz-page:_success " + JSON.stringify(this.viz, null, 2));
         this.fire('change-title', {title: this.viz.title});
       },
 
@@ -92,7 +90,6 @@
       },
 
       _showDescription: function(e, detail, sender) {
-        console.log("show desc");
         this.$.dialog.open();
       }
 

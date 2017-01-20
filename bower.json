@@ -19,7 +19,8 @@
     "iron-ajax": "PolymerElements/iron-ajax#^1.4.3",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
     "iron-signals": "PolymerElements/iron-signals#^1.0.3",
-    "paper-dialog": "PolymerElements/paper-dialog#^1.1.0"
+    "paper-dialog": "PolymerElements/paper-dialog#^1.1.0",
+    "leaflet-map": "^1.2.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

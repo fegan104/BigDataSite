@@ -18,7 +18,6 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="not-found.html">
 <link rel="import" href="elements-page.html">
 <link rel="import" href="data-pages.html">
 
@@ -118,7 +117,7 @@
             <paper-icon-button icon="menu" drawer-toggle style="margin-left: -12px;"></paper-icon-button>
             <div main-title id="toolbarText"></div>
             <paper-toggle-button class="cyan-yellow" checked={{checked}} on-change="_contentToggled"></paper-toggle-button>
-            <paper-icon-button icon="more-vert" on-tap="_fireDescSignal"></paper-icon-button>
+            <paper-icon-button icon="info" on-tap="_fireDescSignal"></paper-icon-button>
           </app-toolbar>
         </app-header>
 
@@ -161,7 +160,6 @@
       },
 
       setTitle: function(e){
-        console.log("bigdatasite-app:setTitle " + JSON.stringify(e.detail, null, 2));
         this.title = e.detail.title;
       },
 
