@@ -159,6 +159,11 @@
         menuItems: {
           type:Array,
           observer: '_refreshMenu'
+        },
+        currentViz:{
+          type: String,
+          value:"bell_towers_media",
+          observer:"_selectViz"
         }
       },
 
@@ -168,7 +173,8 @@
 
       attached: function() {
         if (!this.route.path) {
-          this.set('route.path', '/visualization');
+          this.set('route.path', '/visualization/' + this.currentViz);
+          console.log(this.currentViz);
           this.title = 'Visualizations';
           this.checked = true;
         } else if (this.route.path === '/elements') {
@@ -188,7 +194,7 @@
         if (this.checked) {
           this.title = 'Visualizations';
           //TODO the final bug this needs to remember which viz we were looking at and it solves twofer
-          this.set('route.path', '/visualization');
+          this.set('route.path', '/visualization/' + this.currentViz);
           this.menuItems = this.vizMenuItems;
         } else {
           this.title = 'Urban Elements';
@@ -209,6 +215,8 @@
       _menuSelected: function(e) {
         if (this.route.path === '/elements') {
           this.fire('iron-signal', {name: "layer", data:e.model.item});
+        } else {
+          this.currentViz = e.model.item.toLowerCase().split(' ').join('_');
         }
       },
 
@@ -221,6 +229,9 @@
 
       _fireDescSignal:function() {
         this.fire('iron-signal', {name: "desc"});
+      },
+      _selectViz:function () {
+        console.log(this.currentViz);
       }
     });
   </script>
