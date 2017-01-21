@@ -96,7 +96,7 @@
         <app-toolbar><b>Venice<b/></app-toolbar>
 
         <!-- Drawer Menu -->
-        <paper-menu id="menu" selected="[[routeData.tail]]" attr-for-selected="label">
+        <paper-menu id="menu" selected="[[routeData.tail]]" attr-for-selected="label" multi={{!checked}}>
           <template id="menuDomRepeat" is="dom-repeat" items="[[menuItems]]">
             <!-- Menu Items -->
             <paper-submenu>

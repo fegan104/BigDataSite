@@ -95,17 +95,28 @@
         //get the actual geoJson now that we have the link
         var geoAjax = this.$.geoJsonAjax;
         geoAjax.url = this.elementData.link;
-        this.linkToIdMap[this.elementData.link] = id;
+        this.linkToIdMap[this.elementData.link] = {"id":id, "color": this.elementData.color};
         geoAjax.generateRequest();
       },
 
       _geoSuccess:function(e) {
-        const id = this.linkToIdMap[e.detail.url];
-        // L.geoJson(this.geoJsonData).addTo(this.$.leaflet.map);
-        var linesFeatureLayer = L.geoJson(this.geoJsonData);
-        // console.log("adding:" + this.layers[id]);
+        var dict = this.linkToIdMap[e.detail.url];
+        const id = dict.id;
+        console.log(id);
+        //we need each set of points on tehir own layer
+        var linesFeatureLayer = L.geoJson(this.geoJsonData, {
+          style: {
+            "color": dict.color
+          },
+          pointToLayer: function(feature, latlng) {
+            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.5});
+          },
+          onEachFeature: function(feature, layer) {
+            layer.bindPopup(feature.properties.Name);
+          }
+        });
+        //now we can access/remove layers by id
         this.layers[id] = linesFeatureLayer;
-        // console.log("added:" + this.layers[id]);
         linesFeatureLayer.addTo(this.$.leaflet.map);
       },
 

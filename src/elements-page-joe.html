@@ -208,39 +208,6 @@
     var fountainsJSON = 'https://cityknowledge.firebaseio.com/geojson/PV%20FINAL%20MERGE%202014%20KM%20Fountains.json';
     var riiTeraJSON = 'https://cityknowledge.firebaseio.com/geojson/Rii%20Tera%20Complete%20MERGE.json';
 
-    $( document ).ready(function() {
-      // Initialize collapse button
-      // ** NOTE: BELOW CAUSES DARK SCREEN ERROR **
-      $(".button-collapse").sideNav({
-        menuWidth: 250
-      });
-      // Initialize collapsible (uncomment the line below if you use the dropdown variation)
-      $('.collapsible').collapsible();
-      $('#modal1').modal();
-
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyC6NAfPU1NV6QJcqL4sg4VJGa9S7nVXP4Q",
-        authDomain: "web-quickstart-5505a.firebaseapp.com",
-        databaseURL: "https://cityknowledge.firebaseio.com",
-        storageBucket: "gs://firebase-cityknowledge.appspot.com",
-      };
-      firebase.initializeApp(config);
-
-      // Leaflet
-      mymap = L.map('veniceMap').setView([45.438096, 12.330628], 14);
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(mymap); // note: from Archaeo's code "geojson_leaflet.html"
-
-
-    });
-
-    function toggleJSON(ev, type) {
-      var currentLayer;
-      var val;
-      var color;
-      console.log(type);
 
       // if statements typed out separately so as not to confuse local/global var names
       if (type === "bellClocks") {
