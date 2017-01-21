@@ -33,6 +33,7 @@
     <iron-ajax
       id="geoJsonAjax"
       handle-as="json"
+      on-response="_geoSuccess"
       last-response="{{geoJsonData}}">
     </iron-ajax>
 
@@ -58,6 +59,10 @@
         layers:{
           type:Array,
           value: []
+        },
+        linkToIdMap:{
+          type:Array,
+          value: []
         }
       },
 
@@ -71,13 +76,11 @@
       },
 
       removeLayer:function(id) {
-        console.log("removing: " + id);
         this.$.leaflet.map.removeLayer(this.layers[id]);
         delete this.layers[id];
       },
 
       addLayer: function(id) {
-        console.log("adding: " + id);
         this.layers[id] = id;
 
         //make AJAX request for geoJson
@@ -87,13 +90,23 @@
       },
 
       _success:function(e) {
+        var url = e.detail.url;
+        const id = url.replace("/elements/", "").replace(".json", "");
         //get the actual geoJson now that we have the link
         var geoAjax = this.$.geoJsonAjax;
         geoAjax.url = this.elementData.link;
+        this.linkToIdMap[this.elementData.link] = id;
         geoAjax.generateRequest();
-        geoAjax.addEventListener('response', function() {
-          L.geoJson(this.geoJsonData).addTo(this.$.leaflet.map);
-        }.bind(this));
+      },
+
+      _geoSuccess:function(e) {
+        const id = this.linkToIdMap[e.detail.url];
+        // L.geoJson(this.geoJsonData).addTo(this.$.leaflet.map);
+        var linesFeatureLayer = L.geoJson(this.geoJsonData);
+        // console.log("adding:" + this.layers[id]);
+        this.layers[id] = linesFeatureLayer;
+        // console.log("added:" + this.layers[id]);
+        linesFeatureLayer.addTo(this.$.leaflet.map);
       },
 
       _computeId:function(name) {
