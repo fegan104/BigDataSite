@@ -46,7 +46,10 @@
       .drawer-list {
         margin: 0 20px;
       }
-
+      .paper-item-link {
+        color: inherit;
+        text-decoration: none;
+      }
       paper-item {
         --paper-item: {
           cursor: pointer;
@@ -69,15 +72,24 @@
       active="{{pageActive}}">
     </app-route>
 
-    <!-- Menu Config JSON -->
+    <!-- Viz Menu Config JSON -->
     <iron-ajax
       auto
       url="/vizualizations.json"
       handle-as="json"
-      last-response="{{menuItems}}"
+      last-response="{{vizMenuItems}}"
+      on-response="_contentToggled"
       debounce-duration="300">
     </iron-ajax>
-
+    <!-- Elements Menu -->
+    <iron-ajax
+      auto
+      url="/elements.json"
+      handle-as="json"
+      last-response="{{eleMenuItems}}"
+      on-response="_contentToggled"
+      debounce-duration="300">
+    </iron-ajax>
 
     <app-drawer-layout fullbleed>
       <app-drawer id="drawer" swipe-open>
@@ -85,7 +97,7 @@
 
         <!-- Drawer Menu -->
         <paper-menu id="menu" selected="[[routeData.tail]]" attr-for-selected="label">
-          <template is="dom-repeat" items="[[menuItems]]">
+          <template id="menuDomRepeat" is="dom-repeat" items="[[menuItems]]">
             <!-- Menu Items -->
             <paper-submenu>
               <paper-item label="[[item.name]]" class="menu-trigger">
@@ -94,10 +106,14 @@
 
               <paper-menu class="menu-content sublist">
                 <!-- Submenu Items -->
-                <template is="dom-repeat" items="[[item.countries]]">
+                <template is="dom-repeat" items="[[item.topics]]">
 
                   <paper-item label="[[item]]">
-                    <a href="[[_computeLink(item)]]">[[item]]</a>
+                    <a href="[[_computeLink(item)]]"
+                      on-tap="_menuSelected"
+                      class="paper-item-link">
+                      [[item]]
+                    </a>
                   </paper-item>
 
                 </template>
@@ -123,7 +139,8 @@
 
         <!-- Pages -->
         <main>
-          <data-pages page="{{routeData.page}}" route="{{route}}" height="100%" width="100%"></data-pages>
+          <data-pages page="{{routeData.page}}"
+            route="{{route}}"></data-pages>
         </main>
       </app-header-layout>
     </app-drawer-layout>
@@ -138,6 +155,10 @@
         title:{
           type:String,
           observer:"_toolbarChanged"
+        },
+        menuItems: {
+          type:Array,
+          observer: '_refreshMenu'
         }
       },
 
@@ -166,18 +187,35 @@
       _contentToggled: function(e) {
         if (this.checked) {
           this.title = 'Visualizations';
+          //TODO the final bug this needs to remember which viz we were looking at and it solves twofer
           this.set('route.path', '/visualization');
+          this.menuItems = this.vizMenuItems;
         } else {
           this.title = 'Urban Elements';
           this.set('route.path', '/elements');
+          this.menuItems = this.eleMenuItems;
         }
+      },
+
+      _refreshMenu:function() {
+        this.$.menuDomRepeat.items = this.menuItems;
+        this.$.menuDomRepeat.render();
       },
 
       _toolbarChanged:function() {
         this.$.toolbarText.innerHTML = this.title;
       },
 
+      _menuSelected: function(e) {
+        if (this.route.path === '/elements') {
+          this.fire('iron-signal', {name: "layer", data:e.model.item});
+        }
+      },
+
       _computeLink:function(name) {
+        if (this.route.path === '/elements') {
+          return '#/elements';
+        }
         return "#/visualization/" + name.toLowerCase().split(' ').join('_');
       },
 

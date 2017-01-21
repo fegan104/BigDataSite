@@ -16,29 +16,31 @@
         border: none
       }
       leaflet-map{
-        height: 100vh;
+        height: 90vh;
       }
     </style>
 
-    <leaflet-map latitude="45.43" longitude="12.35" zoom="14">
+    <!-- Listen to toggle a layer -->
+    <iron-signals on-iron-signal-layer="toggleLayer"></iron-signals>
+    <!-- Used for getting elment config data -->
+    <iron-ajax
+      id="elementAjax"
+      handle-as="json"
+      on-response="_success"
+      last-response="{{elementData}}">
+    </iron-ajax>
+    <!-- Used for getting geoJson from Firebase -->
+    <iron-ajax
+      id="geoJsonAjax"
+      handle-as="json"
+      last-response="{{geoJsonData}}">
+    </iron-ajax>
+
+    <leaflet-map id="leaflet" latitude="45.43" longitude="12.35" zoom="14">
       <!-- My apartment! -->
-      <leaflet-marker latitude="45.4381143" longitude="12.3238598" icon="myicon" title="Home">
+      <leaflet-marker latitude="45.4381143" longitude="12.3238598" title="Home">
 				Home
 			</leaflet-marker>
-      <!-- a firebase url 🙏 that the geojson is public -->
-      <template is="dom-bind">
-
-    		<iron-ajax auto url="https://cityknowledge.firebaseio.com/geojson/MERGE%20Ponti.json"
-          handle-as="json"
-          last-response="{{data}}">
-        </iron-ajax>
-
-    		<leaflet-geojson id="leafletgeojson"
-          color="#FF0000"
-          data="[[data]]">
-        </leaflet-geojson>
-
-    	</template>
     </leaflet-map>
   </template>
 
@@ -52,7 +54,50 @@
           type: Boolean,
           value: false,
           reflectToAttribute: true
+        },
+        layers:{
+          type:Array,
+          value: []
         }
+      },
+
+      toggleLayer: function(e, detail, sender) {
+        const id = this._computeId(detail);
+        if (id in this.layers) {
+          this.removeLayer(id);
+        } else {
+          this.addLayer(id);
+        }
+      },
+
+      removeLayer:function(id) {
+        console.log("removing: " + id);
+        this.$.leaflet.map.removeLayer(this.layers[id]);
+        delete this.layers[id];
+      },
+
+      addLayer: function(id) {
+        console.log("adding: " + id);
+        this.layers[id] = id;
+
+        //make AJAX request for geoJson
+        var elementAjax = this.$.elementAjax;
+        elementAjax.url = "/elements/" + id + ".json";
+        elementAjax.generateRequest();
+      },
+
+      _success:function(e) {
+        //get the actual geoJson now that we have the link
+        var geoAjax = this.$.geoJsonAjax;
+        geoAjax.url = this.elementData.link;
+        geoAjax.generateRequest();
+        geoAjax.addEventListener('response', function() {
+          L.geoJson(this.geoJsonData).addTo(this.$.leaflet.map);
+        }.bind(this));
+      },
+
+      _computeId:function(name) {
+        return name.toLowerCase().split(' ').join('_');
       }
     });
   </script>

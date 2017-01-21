@@ -1,28 +1,28 @@
 [
   {
     "name":"Architecture",
-    "countries": [
-      "Bell Towers",
+    "topics": [
+      "Bell Towers Media",
       "Hidden Venice"
     ]
   },
   {
     "name":"Art",
-    "countries": [
+    "topics": [
       "Displaced Art",
       "Wells"
     ]
   },
   {
     "name":"Economy",
-    "countries": [
+    "topics": [
       "Shops",
       "Stores"
     ]
   },
   {
     "name":"Environment",
-    "countries": [
+    "topics": [
       "Canal Hydrodynamics",
       "Moto Ondoso",
       "Tidal Latency",
@@ -31,7 +31,7 @@
   },
   {
     "name":"History",
-    "countries": [
+    "topics": [
       "Evolution of Venice",
       "Historical Map Explorer",
       "History of Venice"
@@ -39,7 +39,7 @@
   },
   {
     "name":"Infrastructure",
-    "countries": [
+    "topics": [
       "Bridge Clearance",
       "Canals",
       "Canal Maintenance",
@@ -48,7 +48,7 @@
   },
   {
     "name":"Mobility",
-    "countries": [
+    "topics": [
       "Boat Traffic Model",
       "Pedestrian Congestion",
       "Pedestrian Model"
@@ -56,7 +56,7 @@
   },
   {
     "name":"Society",
-    "countries": [
+    "topics": [
       "Census Evolution",
       "Islands"
     ]
