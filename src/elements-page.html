@@ -3,22 +3,7 @@
 
 <dom-module id="elements-page">
   <template>
-    <style>
-      :host {
-        display: none;
-      }
-      :host([active]){
-        display: block;
-      }
-      :host leaflet-map {
-        height:18em;
-        width:99%;
-        border: none
-      }
-      leaflet-map{
-        height: 90vh;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/elements-page.css">
 
     <!-- Listen to toggle a layer -->
     <iron-signals on-iron-signal-layer="toggleLayer"></iron-signals>
@@ -108,7 +93,20 @@
             return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.5});
           },
           onEachFeature: function(feature, layer) {
-            layer.bindPopup(feature.properties.Name);
+            layer.bindPopup("pippo" + feature.properties.ckid + "--"); //feature.properties.Name);
++            layer.bindPopup(function() {
++              var el = $('<div/>');
++              $.get(
++                "https://cityknowledge.firebaseio.com/data/" +
++                feature.properties.ckid + ".json").done(function(data) {
++                el.html(
++                  "CKID:" + data.birth_certificate.ckID + "<br />" +
++                  "Nome:" + data.data['Common name']
++                );
++                popup.update();
++              });
++              return el[0];
++            });
           }
         });
         //now we can access/remove layers by id
