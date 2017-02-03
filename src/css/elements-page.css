@@ -1,0 +1,14 @@
+:host {
+  display: none;
+}
+:host([active]){
+  display: block;
+}
+:host leaflet-map {
+  height:18em;
+  width:99%;
+  border: none
+}
+leaflet-map{
+  height: 90vh;
+}
