@@ -193,7 +193,6 @@
       _contentToggled: function(e) {
         if (this.checked) {
           this.title = 'Visualizations';
-          //TODO the final bug this needs to remember which viz we were looking at and it solves twofer
           this.set('route.path', '/visualization/' + this.currentViz);
           this.menuItems = this.vizMenuItems;
         } else {
